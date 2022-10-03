@@ -1,0 +1,287 @@
+
+In Terminal 
+
+Olu-iMac:~ Ishman79$ cd Downloads
+
+Olu-iMac:Downloads Ishman79$ ls -la
+
+total 61000
+drwx------@ 11 Ishman79  staff       352 Mar  3 11:55 .
+drwxr-xr-x@ 50 Ishman79  staff      1600 Mar  3 09:46 ..
+-rw-------@  1 Ishman79  staff      6148 Feb 26 20:21 .DS_Store
+-rw-r--r--   1 Ishman79  staff         0 Dec 17  2017 .localized
+-rw-r--r--@  1 Ishman79  staff    880910 Dec 16  2019 5uyNYw2QGUCn9FXyQkD-ZA.pdf
+drwxr-xr-x@  3 Ishman79  staff        96 Jun 23  2020 Aerial.saver
+-rw-r--r--@  1 Ishman79  staff   6671606 Jul  9  2020 Aerial.saver.zip
+-rw-r--r--@  1 Ishman79  staff  20506371 Feb 10 11:30 Grammarly.dmg
+-rw-r--r--@  1 Ishman79  staff   3153019 Nov 23  2017 Mom.JPG
+drwxr-xr-x   5 Ishman79  staff       160 Feb 12 17:12 Preferences.wacomprefs
+-r--------@  1 Ishman79  staff      1700 Feb  3 21:21 olukey.pem
+
+Olu-iMac:Downloads Ishman79$ chmod 400 olukey.pem
+
+Olu-iMac:Downloads Ishman79$ ssh -i "olukey.pem" ec2-user@ec2-35-172-190-228.compute-1.amazonaws.com
+
+-- You are now logged into you aws instance --
+
+sudo -i : will take you to root directory 
+
+yum update -y : will give all necessary updates to aws instance
+
+[root@ip-172-31-22-121 ~]# hostnamectl set-hostname olulinux && exec bash # Name a server
+
+
+
+Config changes:
+----------------------
+
+***************
+server.conf file
+#disk usage 
+
+[diskUsage]
+minFreeSpace = 200
+
+***************
+inputs.conf 
+#receieving port
+
+[splunktcp://9997]
+disabled = 0
+***************
+
+all script
+echo -e "\n\n[diskUsage]\nminFreeSpace = 200\n" >> /opt/splunk/etc/system/local/server.conf
+
+idx script
+echo -e "\n\n[splunktcp://9997]\ndisabled = 0\n" >> /opt/splunk/etc/system/local/inputs.conf
+
+***************
+
+
+----Splunk Install Regular Script Step by Step----- 
+
+#Log in to AWS Instance  # Chmod 400 code + SSH code
+
+sudo -i   # will take you to root directory 
+
+yum update -y  # will give all necessary updates to aws instance
+
+cd /opt
+
+useradd splunk
+
+wget -O splunk-9.0.1-82c987350fde-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/9.0.1/linux/splunk-9.0.1-82c987350fde-Linux-x86_64.tgz"   # Downloads Splunk from the web
+
+tar -xvzf splunk-9.0.1-82c987350fde-Linux-x86_64.tgz -C /opt   # Unzips the splunk download
+
+chown -R splunk:splunk /opt/splunk  # Changes ownership to splunk
+
+su - splunk  # log in to splunk
+
+cd /opt/splunk/bin/ # Go to splunk bin 
+
+/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd welcome90  #exit out of splunk back to root then enable boot start - if you don't exit of out splunk you will get an error msg stating you don't have the permission to enable boot start in splunk
+
+exit 
+
+cd /opt/splunk/bin/
+
+./splunk enable boot-start -user splunk
+
+./splunk status
+
+
+----Splunk Install Script Regular (AUTO) - Dump it in  ----- 
+
+
+#!/bin/bash
+sudo -i
+cd /opt
+#yum -y install wget net-tools
+useradd splunk wget -O splunk-9.0.1-82c987350fde-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/9.0.1/linux/splunk-9.0.1-82c987350fde-Linux-x86_64.tgz"
+tar -xvzf splunk-9.0.1-82c987350fde-Linux-x86_64.tgz -C /opt
+chown -R splunk:splunk /opt/splunk
+su - splunk
+cd /opt/splunk/bin/
+/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd welcome90
+exit     #this is needed so you can leave splunk and run the next command as root#
+/opt/splunk/bin/splunk enable boot-start -user splunk  #use -user and not --user#
+su - splunk		#become splunk#
+ls -laR /opt/splunk/var
+/opt/splunk/bin/splunk status
+
+
+
+--- Splunk Install Script (AUTO) - Dump it in | Use for DPS / DP / SH 1,2,3 | Edit hostname before install ----
+
+sudo -i
+hostnamectl set-hostname LAB && exec bash
+#!/bin/bash
+sudo -i
+cd /opt
+#yum -y install wget net-tools
+useradd splunk 
+wget -O splunk-9.0.1-82c987350fde-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/9.0.1/linux/splunk-9.0.1-82c987350fde-Linux-x86_64.tgz"
+tar -xvzf splunk-9.0.1-82c987350fde-Linux-x86_64.tgz -C /opt
+chown -R splunk:splunk /opt/splunk
+su - splunk
+cd /opt/splunk/bin/
+/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd welcome90
+exit     #this is needed so you can leave splunk and run the next command as root#
+/opt/splunk/bin/splunk enable boot-start -user splunk  #use -user and not --user#
+su - splunk     #become splunk#
+ls -laR /opt/splunk/var
+/opt/splunk/bin/splunk status
+cd /opt/splunk/etc/system/local/
+echo -e "\n\n[diskUsage]\nminFreeSpace = 200\n" >> /opt/splunk/etc/system/local/server.conf
+/opt/splunk/bin/splunk restart
+
+
+
+
+
+----Splunk Universal Forwarder Install Script (AUTO) - Dump it in ----- 
+
+
+sudo -i
+hostnamectl set-hostname UForwarder && exec bash
+#!/bin/bash
+sudo -i
+cd /opt
+#yum -y install wget net-tools
+useradd splunk
+wget -O splunkforwarder-8.2.4-87e2dda940d1-Linux-x86_64.tgz "https://download.splunk.com/products/universalforwarder/releases/8.2.4/linux/splunkforwarder-8.2.4-87e2dda940d1-Linux-x86_64.tgz"
+tar -xvzf splunkforwarder-8.2.4-87e2dda940d1-Linux-x86_64.tgz -C /opt
+chown -R splunk:splunk /opt/splunkforwarder
+su - splunk 
+cd /opt/splunkforwarder/bin/
+/opt/splunkforwarder/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd welcome90
+exit     #this is needed so you can leave splunk and run the next command as root#
+/opt/splunkforwarder/bin/splunk enable boot-start -user splunk  #use -user and not --user#
+su - splunk     #become splunk#
+ls -laR /opt/splunkforwarder/var
+/opt/splunkforwarder/bin/splunk status
+
+
+
+--- Cluster Master Script Install ----
+
+sudo -i
+hostnamectl set-hostname CM && exec bash
+#!/bin/bash
+sudo -i
+cd /opt
+#yum -y install wget net-tools
+useradd splunk 
+wget -O splunk-9.0.1-82c987350fde-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/9.0.1/linux/splunk-9.0.1-82c987350fde-Linux-x86_64.tgz"
+tar -xvzf splunk-9.0.1-82c987350fde-Linux-x86_64.tgz -C /opt
+chown -R splunk:splunk /opt/splunk
+su - splunk
+cd /opt/splunk/bin/
+/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd welcome90
+exit     #this is needed so you can leave splunk and run the next command as root#
+/opt/splunk/bin/splunk enable boot-start -user splunk  #use -user and not --user#
+su - splunk     #become splunk#
+ls -laR /opt/splunk/var
+/opt/splunk/bin/splunk status
+cd /opt/splunk/etc/system/local/
+echo -e "\n\n[diskUsage]\nminFreeSpace = 200\n" >> /opt/splunk/etc/system/local/server.conf
+/opt/splunk/bin/splunk restart
+
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+**********
+
+Indexer script (auto connect to CM)
+
+#change nmaster_uri IP and pass4sym key 
+-----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+--- Install Splunk on Linux Backend of IDX 1,2,3  -----
+
+1. SSH into the linux backend of the DPS / DP / CM / IDX 1,2,3 / SH 1,2,3
+2. Sudo -i  # go to root
+3. hostnamectl set-hostname DPS && exec bash - rename server to UF1
+4. Repeat step # 3 for  IDX 1,2,3
+
+5. Install Splunk regular version on each IDX 1,2,3 - see script below 
+
+
+sudo -i
+hostnamectl set-hostname IDX1 && exec bash
+#!/bin/bash
+sudo -i
+cd /opt
+#yum -y install wget net-tools
+useradd splunk 
+wget -O splunk-9.0.1-82c987350fde-Linux-x86_64.tgz "https://download.splunk.com/products/splunk/releases/9.0.1/linux/splunk-9.0.1-82c987350fde-Linux-x86_64.tgz"
+tar -xvzf splunk-9.0.1-82c987350fde-Linux-x86_64.tgz -C /opt
+chown -R splunk:splunk /opt/splunk
+su - splunk
+cd /opt/splunk/bin/
+/opt/splunk/bin/splunk start --accept-license --answer-yes --no-prompt --seed-passwd welcome90
+exit     #this is needed so you can leave splunk and run the next command as root#
+/opt/splunk/bin/splunk enable boot-start -user splunk  #use -user and not --user#
+su - splunk     #become splunk#
+ls -laR /opt/splunk/var
+/opt/splunk/bin/splunk status
+cd /opt/splunk/etc/system/local/
+echo -e "\n\n[diskUsage]\nminFreeSpace = 200\n" >> /opt/splunk/etc/system/local/server.conf
+echo -e "\n\n[splunktcp://9997]\ndisabled = 0\n" >> /opt/splunk/etc/system/local/inputs.conf
+echo -e "\n\n[replication_port://8080]\n\n[clustering]\nmaster_uri = https://172.31.81.239:8089\nmode = slave\npass4SymmKey = olukey\n" >> /opt/splunk/etc/system/local/server.conf
+/opt/splunk/bin/splunk restart
+/opt/splunk/bin/splunk status
+echo "ALL SET, LETS SPLUNK"
+
+
+
+
+
+----Syslog Install Script (AUTO) - Dump it in ----- 
+
+#!/bin/bash
+sudo -i
+hostnamectl set-hostname syslog && exec bash # this is just renaming the server
+amazon-linux-extras install epel -y
+yum update -y
+cd /etc/yum.repos.d #repository  # this creates a directory/container for the syslog to live
+wget https://copr.fedorainfracloud.org/coprs/czanik/syslog-ng335/repo/epel-7/czanik-syslog-ng335-epel-7.repo 
+yum install syslog-ng -y # install syslog
+yum install syslog-ng-http -y # syslog for HEC
+cat /etc/os-release # server info
+systemctl enable syslog-ng
+systemctl start syslog-ng
+systemctl status syslog-ng
+
+
+
+
+
+---extra---- 
+
+./splunk start # starts splunk 
+./splunk status # checks splunk status
+./splunk stop # stops splunk
+./splunk restart # restarts splunk 
+
+exit # log out of splunk to root
+Ctrl + D # logs you out to root 
+cd # takes you to the root of that directory 
+
+hostnamectl set-hostname IDX1 && exec bash # rename server instance
+hostnamectl set-hostname IDX2 && exec bash
+hostnamectl set-hostname SH1 && exec bash
+hostnamectl set-hostname UF && exec bash
+
+thisisunsafe # move past unsecure page
+
+
+---Confirm via Linux that Splunk is running ----
+
+cd /opt/splunk/bin/  # From root cd to splunk bin in root then run ./splunk status below
+
+./splunk status
