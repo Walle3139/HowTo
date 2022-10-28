@@ -1,0 +1,87 @@
+How to Add Data to Assets & Identities
+Creating a Lookup Table File
+File Upload
+If you are uploading a lookup table file to Splunk for A&I information, such as a list of static Ips and
+hostnames provided by the client, do the following:
+
+1. In Excel or the editor of your choice, enjoy that the fields in the file match the required fields,
+depending on if the data is asset information or identity information. Optionally, you can upload the
+file directly and edit the field names/values in Splunk later on.
+2. Save/ensure the file is a utf-8 encoded CSV, then Upload the lookup table to Splunk in the
+Enterprise Security app by going to Settings->Lookups->Lookup Table Files->Add New. For the file
+name, its typically fine to just name it the same name.
+3. After uploading the lookup table, locate the lookup table and click on Permissions - we need to
+share it globally. In the permissions screen, ensure the Object is shared to All apps, and is readable
+by Everyone. It can be set to be written to by whatever role you deem necessary - typically power is
+fine. Click save.
+If you need to edit the lookup table by changing field names or adding values to fields, you can do
+so in Splunk at this point by opening up a new search and using inputlookup/outputlookup.
+IMPORTANT! OUTPUTLOOKUP WILL COMPLETELY REWRITE THE LOOKUP TABLE -
+PLEASE RUN YOUR SEARCH WITHOUT THE OUTPUTLOOKUP COMMAND TO ENSURE
+YOUR CHANGES ARE ACCURATE BEFORE RUNNING THE SEARCH AGAIN WITH
+OUTPUTLOOKUP
+
+From a Saved Search
+If you are creating an asset/identity table from a saved search, for example from DHCP data every 30min,
+follow these steps:
+1. Create and test the search string in a Splunk search. Ensure that you are returning the correct fields
+depending on whether you are writing a lookup table for assets or identities.
+Once you are satisfied with the saved search, add "|outputlookup <table_name>.csv" to the end of
+the search, and run it again.
+
+Next, create a saved search in Splunk. Go to Settings -> Searches, reports, and alerts -> New
+Report
+Title your report something descriptiv, like "NH - Universal Forwarder Asset Lookup Gen". Fill out
+the description field with what the search is doing. Set your earliest time based on the data you are
+looking at and how often you are running the search. For example, DHCP leases typically change
+every 30mins, so if you are looking at DHCP asset info, you would run the search for -30m earliest,
+and run it every 30min. Hit save.
+Navigate to your alert, then hit Edit under Actions, and select "Edit Permissions". Ensure the
+permissions are set to be shared globally, read by everyone, and written by whatever level role you
+deem necessary. Hit save
+Hit edit again, and select Edit Schedule. Schedule the search to run on an interval based upon the
+data you are gathering for asset/identity info and your earliest search time. Hit save
+Creating a Lookup Definition
+
+In order for Splunk ES to use the lookup table, you must create a lookup definition for the lookup table:
+1. Select Settings -> Lookups -> Lookup definitions -> New Lookup Definition
+2. Destination app should be SplunkEnterpriseSecuritySuite. The name of the lookup definition can be
+set to anything, but we typically set it to the name of the lookup table minus the csv suffix.
+a. For example, if your lookup table is named my_lookup.csv, the definition name would be
+my_lookup
+3. Leave Type as File-Based, and find/select your lookup table in the Lookup file setting.
+If your lookup table is CIDR based for the IP Address, it’s a good idea to give it this functionality.
+Select Advanced Options, DESELECT Case Sensitive Match, under match type, type
+CIDR(ip). PLEASE NOTE! If you use CIDR matching on the IP field, ALL THE VALUES FOR IP
+MUST BE IN CIDR NOTATION. If you have a single IP address, add /32 at the end of it if it does not
+currently have a /32 at the end.
+Hit save, then ensure the permissions for your definition are set to be shared globally, read by
+everyone, writable by whatever role you see fit.
+
+Adding the Lookup to A&I
+Now we have to add the actual lookup to A&I so Splunk case use it.
+
+1. Inside of Enterprise Security, navigate to the menu up top and select Configure -> Data Enrichment
+-> Asset and Identity Management
+If you are adding an asset, make sure you are in "Asset Lookup Configuration". If you are adding an
+identity, navigate to "Identity Lookup Configuration". Select "New"
+Find your lookup definition as your source. If you cannot find it, make sure the permissions are
+correct and reload the page.
+For the Name, you can just use the name of the lookup definition to keep it simple. Category can be
+set to anything, as can description. Everything else can be left as default. Hit save
+Ensure that your new asset table is enabled. You can also click on the link under Source to edit the
+lookup if necessary.
+Ensure that your lookup is in the correct rank. Typically, things that are known from client
+documentation with accurate information should be ranked higher than data that may be old or
+slightly inaccruate/variable from indexes, like DHCP data.
+Test
+To ensure that your asset table was added, you can use the following command in Splunk to search through
+the merged asset or identity table
+ASSET:
+" | `assets`"
+The search above will not show if CIDR lookups are being applied correctly. You will need to test a ip that
+would be overlapping in the search below
+1| makeresults | eval src="<src_ip or dns host here>" | `get_asset(src)`
+IDENTITYS
+"| `identities`"
+1| makeresults | eval user="<username or email>" | `get_identity4events(user)`
