@@ -1,0 +1,4 @@
+pull a list of Indexes and sourcetypes in Splunk SPL
+
+| tstats values(sourcetype) where index=*
+
