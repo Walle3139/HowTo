@@ -1,0 +1,14 @@
+- Summary index to solve slow searches that ensures faster display of dashboard panels. 
+    - We have a join command connecting search results from two base searches. 1 of the searches has a large data volume. 
+    - We created a summary index for that search to make overall search faster 
+
+
+- Save as Report to speed up slow searches and load a dashboard panel faster 
+    - Run the slow SPL and Save as a Report 
+    - Select the frequency of the report 
+    - Go to the dashboard where you want the fast panel
+    - Click Edit in Top right 
+    - Click + Add Panel in the middle left 
+    - Select New from Report 
+    - Pick the Report you just saved as a panel.
+    - Now that Panel should load faster   
