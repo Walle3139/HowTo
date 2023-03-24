@@ -1,0 +1,75 @@
+Perform a single instance upgrade [Standalone Splunk Instance]
+
+
+Ensure compatibility of Splunk product upgrade paths that are available from previous versions of Splunk Enterprise.
+
+
+Login into the host running Splunk.
+
+
+Either copy using sftp or download the new Splunk package using WGET.
+
+
+Stop the splunk instance.
+$ /opt/splunk/bin/splunk stop
+
+
+Verify Splunk status, using the below commend.
+$ /opt/splunk/bin/splunk status
+
+
+Take a backup of $SPLUNK_HOME/etc
+Note: when restoring this backup,
+
+Restore any custom apps & config settings from $SPLUNK_HOME/etc/system or $SPLUNK_HOME/etc/apps, if needed.
+
+This has to be done after the upgrade process completion and needs a restart.
+
+
+Upgrade the Splunk instance, using the below steps.
+
+Extract the new Splunk package to /opt folder, (in *.nix) using the below command:
+
+If using tar
+$ tar -xvzf <new-Splunk-Package.tar.gz> -C /opt
+
+If using rpm
+$ rpm -i <new-Splunk-Package.rpm>
+
+
+Make sure the Splunk folder is owned by splunk:splunk.
+         $ ls -ll /opt
+
+
+If not, use the below command to change the group and ownership to splunk
+
+As root, go to /opt
+
+Run the below command:
+$ chown -R splunk:splunk splunk
+
+Make sure the group and ownership to splunk folder is now splunk:splunk
+$ ls -ll /opt
+
+
+Start the Splunk instance with --accept-license.
+$ /opt/splunk/bin/splunk start --accept-license
+
+
+Splunk will identify this is an upgrade and will display the following output.
+This appears to be an upgrade of Splunk.
+--------------------------------------------------------------------------------
+Splunk has detected an older version of Splunk installed on this machine. To finish upgrading to the new version, Splunk's installer will automatically update and alter your current configuration files. Deprecated 
+configuration files will be renamed with a deprecated extension. You can choose to preview the changes 
+that will be made to your configuration files before proceeding with the migration and upgrade:
+If you want to migrate and upgrade without previewing the changes that will be made to your existing 
+configuration files, choose 'y'.
+If you want to see what changes will be made before you proceed with the upgrade, choose 'n'.
+Perform migration and upgrade without previewing configuration changes? [y/n]
+
+
+Enter [Y or N] and Splunk will start upgrading the binaries appropriately.
+
+
+Verify Splunk status, using the below commend.
+$ /opt/splunk/bin/splunk status
