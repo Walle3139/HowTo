@@ -1,0 +1,168 @@
+Perform a rolling upgrade of an indexer cluster
+
+
+
+Add WorkflowAdd Workflow
+Splunk Enterprise version 7.1.0 and higher supports rolling upgrade for indexer clusters. Rolling upgrade lets you perform a phased upgrade of indexer peers with minimal interruption to your ongoing searches. You can use rolling upgrade to minimize search disruption when upgrading peer nodes to a new version of Splunk Enterprise.
+
+Requirements and considerations
+Review the following requirements and considerations before you initiate a rolling upgrade:
+
+Rolling upgrade only applies to upgrades from version 7.1.x to a higher version of Splunk Enterprise.
+
+The manager node and all peer nodes must be running version 7.1.0 or higher.
+
+All search heads and search head clusters must be running version 7.1.0 or higher.
+
+Do not attempt any clustering maintenance operations, such as rolling restart, bundle pushes, or node additions, during upgrade.
+
+You cannot run the below operations simultaneously, when doing a phased upgrade:
+
+Data rebalance
+
+Excess bucket removal
+
+Rolling restart
+
+Rolling upgrade
+
+If you trigger one of the above operations while another one is already running, splunkd.log, the CLI, and Splunk Web all surface an error that shows a conflicting operation is in progress.
+
+How a rolling upgrade works
+When you initiate a rolling upgrade, you select a peer and take it offline. During the offline process, the manager node reassigns bucket primaries to other peers to retain the searchable state, and the peer completes any in-progress searches within a configurable timeout.
+
+After the manager node shuts down the peer, you perform the software upgrade and bring the peer back online, at which point the peer rejoins the cluster. You repeat this process for each peer node until the rolling upgrade is complete.
+
+Disable deferred scheduled searches
+By default, during rolling upgrade, continuous scheduled searches are deferred until after the upgrade is complete, based on the default defer_scheduled_searchable_idxc attribute in savedsearches.conf. Real-time scheduled searches are deferred regardless of this setting.
+
+You can disable this default behavior so that continuous scheduled searches are not deferred, using the below steps:
+
+On the search head, if not already there, create a file under 
+$SPLUNK_HOME/etc/system/local/savedsearches.conf.
+
+Set defer_scheduled_searchable_idxc to false.
+[default]
+defer_scheduled_searchable_idxc = false
+
+Restart Splunk.
+
+Note: When defer_scheduled_searchable_idxc is disabled, scheduled saved searches might return partial results
+
+To Perform a rolling upgrade
+To upgrade an indexer cluster with minimal search interruption, perform the following steps:
+
+1. Run preliminary health checks
+On the manager node, run the splunk show cluster-status command with the verbose option to confirm the cluster is in a searchable state:
+
+
+$ /opt/splunk/bin/splunk show cluster-status --verbose
+ This command shows information about the cluster state. Review the command output to confirm that the search factor is met and all data is searchable before you initiate the rolling upgrade.
+
+Note: The cluster must have atleast two searchable copies of each bucket to be in a searchable state for a rolling upgrade
+
+Here is an example of the output from the splunk show cluster-status --verbose command:
+
+splunk@manager1:~/bin$ ./splunk show cluster-status --verbose
+Pre-flight check successful .................. YES
+ ├────── Replication factor met ............... YES
+ ├────── Search factor met .................... YES
+ ├────── All data is searchable ............... YES
+ ├────── All peers are up ..................... YES
+ ├────── CM version is compatible ............. YES
+ ├────── No fixup tasks in progress ........... YES
+ └────── Splunk version peer count { 7.1.0: 3 }
+
+ Indexing Ready YES
+
+ idx1          0026D1C6-4DDB-429E-8EC6-772C5B4F1DB5           default
+                  Searchable YES
+                  Status  Up
+                  Bucket Count=14
+                  Splunk Version=7.1.0 
+idx3          31E6BE71-20E1-4F1C-8693-BEF482375A3F            default
+                  Searchable YES
+                  Status  Up
+                  Bucket Count=14
+                  Splunk Version=7.1.0 
+ idx2          81E52D67-6AC6-4C5B-A528-4CD5FEF08009            default
+                  Searchable YES
+                  Status  Up
+                  Bucket Count=14
+                  Splunk Version=7.1.0 
+
+The output shows that the health check is successful, which indicates the cluster is in a searchable state to perform a rolling upgrade.
+
+2. Upgrade the manager node
+Login into the Manager node
+
+Upgrade the Manager node (Perform a single instance upgrade [Standalone Splunk Instance])
+
+Use the manager node dashboard to verify that all cluster nodes are up and running.
+
+3. Upgrade the search head tier
+To perform a member-by-member upgrade:
+
+Upgrade one member and make it a captain:
+
+Stop the member.
+
+Upgrade the member (Perform a single instance upgrade [Standalone Splunk Instance]).
+
+Start the member and wait while it joins the cluster.
+
+Transfer captaincy to the upgraded member.
+
+For each additional member, one-by-one:
+
+Stop the member.
+
+Upgrade the member (Perform a single instance upgrade [Standalone Splunk Instance]).
+
+Start the member.
+
+Upgrade the deployer:
+
+Stop the deployer.
+
+Upgrade the deployer (Perform a single instance upgrade [Standalone Splunk Instance]).
+
+Start the deployer.
+
+4. Initialize rolling upgrade for Indexer Peer nodes
+Run the below command on the manager node:
+
+$ /opt/splunk/bin/splunk upgrade-init cluster-peers
+
+Note: This initializes the rolling upgrade and puts the cluster in maintenance mode.
+
+5. Take the peer offline
+
+Run the below command on the peer node:
+$ /opt/splunk/bin/splunk offline
+
+Note: The manager node reassigns bucket primaries, completes any ongoing searches, and then shuts down the peer.
+
+Note: Taking multiple peers offline simultaneously can impact searches.
+
+6. Upgrade the peer node
+Stop a peer node.
+
+Upgrade the peer node (Perform a single instance upgrade [Standalone Splunk Instance]).
+
+Start the peer node and wait while it joins the cluster.
+
+The peer node starts and automatically rejoins the cluster.
+
+7. Validate version upgrade
+Validate the version upgrade
+
+8. Repeat steps 5-7
+Repeat steps 5-7 until upgrade of all peer nodes is complete.
+
+9. Finalize rolling upgrade
+Run the following CLI command on the manager node:
+
+$ /opt/splunk/bin/splunk upgrade-finalize cluster-peers
+
+This completes the upgrade process and takes the cluster out of maintenance mode.
