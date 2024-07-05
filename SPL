@@ -54,7 +54,7 @@ Input Lookup CMD
 --------
 
 
-Tstats
+--- Tstats ---
 
 Always use tstats to search datamodels 
 
@@ -66,7 +66,7 @@ Always use tstats to search datamodels
 
 
 
-Tstats Query Options 
+--- Tstats Query Options ---
 
 List all sourcetype grouped by index
 
@@ -94,3 +94,17 @@ Latest and earliest: Returns the latest or earliest timestamp for the events mat
 Count how much data & if logs are being ingested into a particular index
 
 | tstats count where index=checkpoint* by _time span=1d
+
+
+---- Assests & Identity ----
+
+List all Assets
+|`assets`
+
+List all Assets /w priority=critical 
+| `assets` 
+| search priority=critical
+
+List all Identities
+| `identities`
+
