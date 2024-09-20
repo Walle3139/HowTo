@@ -1,0 +1,9 @@
+Shows a count #, plus a trend up or down 
+
+
+index=windows  sourcetype=WinEventLog category=*change*
+| timechart count by category
+
+
+index=windows  sourcetype=WinEventLog category=*change*
+| timechart span=1d count by category
