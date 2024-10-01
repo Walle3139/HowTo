@@ -1,1 +1,7 @@
+When you have various logs which have a common field like ComputerID, you can merge the values in the various fields together using 
 
+| stats values(*) by ComputerID 
+
+stats values(*) retrieves all unique fields for all current available fields 
+
+by ComputerID groups the results by ComputerID
