@@ -1,0 +1,26 @@
+---- Alert always needs a triggering argument like a "where" command ----
+
+index=auth_tracker Logon_Type=10 action=success 
+| where NOT like(user, "%.%") OR like(user, "svcacct.%") OR user_category IN ("international travel")
+| stats count by user, dest
+| eventstats sum(count) as total_events 
+| fields user dest count
+| rename count as Login_Count
+
+| where Login_Count >= 10
+
+| sort - Login_Count
+
+
+
+---- Report doesn't need a trigger - just a schedule when the report runs ----
+
+
+index=auth_tracker Logon_Type=10 action=success 
+| where NOT like(user, "%.%") OR like(user, "svcacct.%") OR user_category IN ("international travel")
+| stats count by user, dest
+| eventstats sum(count) as total_events 
+| fields user dest count
+| rename count as Login_Count
+
+| sort - Login_Count
