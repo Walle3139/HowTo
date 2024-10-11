@@ -1,4 +1,4 @@
----- Alert always needs a triggering argument like a "where" command ----
+---- Alert always needs a triggering argument like a "where" command sent to an email address ----
 
 index=auth_tracker Logon_Type=10 action=success 
 | where NOT like(user, "%.%") OR like(user, "svcacct.%") OR user_category IN ("international travel")
@@ -13,7 +13,7 @@ index=auth_tracker Logon_Type=10 action=success
 
 
 
----- Report doesn't need a trigger - just a schedule when the report runs ----
+---- Report doesn't need a trigger - just a schedule when the report runs sent to an email address ----
 
 
 index=auth_tracker Logon_Type=10 action=success 
