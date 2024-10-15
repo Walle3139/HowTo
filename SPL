@@ -5,6 +5,12 @@ index=* OR index=_* host=wssc-15*
 index=* OR index=_* host=wssc-154129
 
 
+Splunk cloud hosts & associated indexes
+
+| tstats summariesonly=t dc(host) where earliest=-14d@d latest=@d index=hbso* sourcetype=* NOT host=*.splunkcloud.com by index host
+
+
+
 Preview Search for details about metric data going into a particular index
 
 | mpreview index=unix_summary
