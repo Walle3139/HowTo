@@ -1,3 +1,11 @@
+
+earliest=-1h@h latest=now
+earliest=-28d@d latest=@d
+earliest="10/17/2024:14:30:00" latest="10/18/2024:14:30:00"
+
+
+
+
 SPL to find missing Forwarder | Host is the forwarder device
 
 index=* OR index=_* host=wssc-15*
