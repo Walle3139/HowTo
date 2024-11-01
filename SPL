@@ -13,40 +13,43 @@ index=* OR index=_* host=wssc-15*
 index=* OR index=_* host=wssc-154129
 
 
-Splunk cloud hosts & associated indexes
+--- Splunk cloud hosts & associated indexes ---
 
 | tstats summariesonly=t dc(host) where earliest=-14d@d latest=@d index=hbso* sourcetype=* NOT host=*.splunkcloud.com by index host
 
 
 
-Preview Search for details about metric data going into a particular index
+--- Preview Search for details about metric data going into a particular index ---
 
 | mpreview index=unix_summary
 
 
-Count the # of Endpoints in a Splunk Environment 
+--- Count the # of Endpoints in a Splunk Environment ---
 
 index=_internal sourcetype=splunkd | stats dc(host) AS count  
 
 | metadata index=* type=hosts   
 
 
-Search & count the Sourcetypes in an environment
+--- Search & count the Sourcetypes in an environment ---
 
 | tstats count where index=* by sourcetype
 
 
-Search & count the index in an environment
+--- Search & count the index in an environment ---
 
 | tstats count where index=* by index
 
 
-List all sourcetype grouped by index
+--- List all sourcetype grouped by index ---
 
 | tstats values(sourcetype) where index=* by index
 
-Show list of data sources in an environment
+--- Show list of data sources in an environment ---
+
 | tstats values(sourcetype) AS sourcetype where index=* by index
+
+| tstats values(sourcetype) AS sourcetype where index=* by host
 
 | tstats values(sourcetype) where index=* sourcetype=infoblox:file by index
 
@@ -54,7 +57,7 @@ Show list of data sources in an environment
 --------
 
 
-Input Lookup CMD
+--- Input Lookup CMD ---
 
 | inputlookup <lookup_name>
 
