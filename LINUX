@@ -15,3 +15,261 @@ Explanation:
 This command will search all files under /etc/apps/ and display lines containing “correlation” followed by “disabled” (regardless of case), with any characters in between.
 
 If you want to list only the file names where the pattern is found, add the -l option:
+
+
+---- Useful LINUX CMDS -----
+
+
+ esc # reverse any action in Linux 
+
+grep olu* /etc/passwd # grep is a way to search in Linux, to find user in linux class 
+
+cat splunkd.log | grep -i df_metric.sh | grep -i error  # Read the content of splunkd.log pipe inputs 
+those logs into the grep search for df_metric.sh then inputs a search for the word error; 
+the -i says ignore case sensitive
+
+[root@olulinux ~]# su - olusa
+
+[olusa@olulinux ~]$ pwd
+
+/home/olusa
+
+cd Downloads
+
+ls -larth 
+
+
+-----vim vimfile # creates vimfile in vim  ----
+
+:r /etc/passwd # read this file /etc/passwd into vimfile 
+
+:r /etc/group # read this file /etc/group into vimfile 
+
+shift + zz # saves file
+
+:wq! # save & quit at the same time
+
+:q! #exit out of vim (without save)
+
+cd / # returns to root directory
+
+truncate -s 0 touchfile # This will set the size of touchfile to zero, thereby erasing the content
+
+
+
+cat # show the content of vimfile
+
+vim # open text editor 
+
+gg # Go to the top 
+
+shift + G # Go to the beginning of the bottom line 
+
+Shift + A # Go to next line; Go to end of line at space + enter to go to next line 
+
+Shift + I # Go to the beginning of the line, then insert
+
+dd # delete that line
+
+dd . # deletes that line then repeats by holding down the dot button 
+
+28dd # if at first line, this will delete line 1 - 28
+
+:se nu # adds numbers to the linux cmd lines on the left
+
+H (left) J (down) K (Up) L (Right)
+
+:20 # Goes to line 20
+
+:8 # Goes to line 8
+
+!76 # runs cmd on line 76 again 
+
+
+top # shows running processes and CPU usage
+
+cmd + v # run this cmd when you've highlighted a previous linux line that you want to copy and paste below.
+
+ctrl + z # stops the running cmd
+
+ctrl + c # cancels the running cmd 
+
+ctrl + L # clears screen
+
+reset  # clears screen without any previous history
+
+ctrl + z # sends what you are working on to the background, then type fg to bring back the old item back.  Example if you are in vim and need to go grab something elsewhere and post it in the vim session.  type ctrl z to push the vim to the bkgd and type fg to bring back, what is in the bkgd 
+
+fg # brings back anything you have pushed previously to the bkgd with ctrl + z cmd
+
+
+------
+
+
+Esc + u # undo
+
+Esc + shift O # new line above  current line 
+
+Esc + o # new line below current line 
+
+shift A # Go to end of a line to type new stuff
+
+$  # End of line
+
+^  # Beginning of line 
+
+shift P # paste the clipboard content on that exact line 
+
+p # paste the clipboard content below
+
+yw # copy word 
+
+dw # delete word
+
+y4w # copy 4 words
+
+yy # copy whole line
+
+4yy # copy 4 lines
+
+find ./ -name web.*  # search for a file in linux with the text web
+
+nfsnobody:x:65534: nfsnobody:x # y3w copy 3 words + shift $ to go to the end + i to insert + space bar 
+
+
+
+-----
+
+Tar Usage and Options | https://www.tecmint.com/18-tar-command-examples-in-linux/
+
+c – create an archive file.
+x – extract an archive file.
+v – show the progress of the archive file.
+f – filename of the archive file.
+t – viewing the content of the archive file.
+j – filter archive through bzip2.
+z – filter archive through gzip.
+r – append or update files or directories to the existing archive files.
+
+tar -czvf splunk_old_backup.tar.gz /opt/splunk/etc/ # creates a zip file of /opt/splunk/etc/ & names it splunk_old_backup.tar.gz
+
+tar -xvzf splunk_old_backup.tar.gz # extracts/unzips compressed file splunk_old_backup.tar.gz into current directory
+
+unzip ssh.log.gz # unzips to ssh.log
+
+-----
+
+
+useradd olusa #set user from root
+
+passwd olusa #set passwd from root
+
+su - olusa # switch user to new user created 
+
+
+[ec2-user@idx1 ~]$ df -h				      # cmd  to see how much storage space left on the server see /dev/xvda1 90 % has been used on this server 
+
+Filesystem      Size  Used Avail Use% Mounted on
+devtmpfs        474M     0  474M   0% /dev
+tmpfs           483M     0  483M   0% /dev/shm
+tmpfs           483M  412K  483M   1% /run
+tmpfs           483M     0  483M   0% /sys/fs/cgroup
+/dev/xvda1       15G   14G  1.6G  90% /
+tmpfs            97M     0   97M   0% /run/user/1000
+
+[root@olulinux ~]# tail /etc/passwd  # shows the users available e.g olusa
+
+[root@olulinux ~]# passwd olusa # if you don't remember password use this to force a change in password 
+
+[olusa@olulinux ~]$ mkdir -p dir1/dir2/dir3   # Nested directory, instead of directory creation 1 at a time 
+
+
+[olusa@olulinux ~]$ ls -lR /home/olusa/dir1   # lists all the nested contents of dir 1
+/home/olusa/dir1:
+total 0
+drwxrwxr-x 3 olusa olusa 18 Apr  9 01:11 dir2
+
+/home/olusa/dir1/dir2:
+total 0
+drwxrwxr-x 2 olusa olusa 6 Apr  9 01:11 dir3 
+
+
+sdiff inputs.conf input.conf # will spit out the diff btw inputs.conf input.conf
+
+
+head -5 /var/log/walle/ssh.log >> /var/log/walle/dhcp.log  # take top 5 lines of /var/log/walle/ssh.log then append or attach to the bottom of /var/log/walle/dhcp.log
+
+tail -6 /var/log/walle/dhcp.log  # this will show what we just appended in the above cmd
+
+
+
+[root@olulinux ~]# ln -vs /etc/hosts /home/olusa/baba1/hs1   # symbolic link - links file /etc/hosts to file /home/olusa/baba1/hs1 - do a link because the original file is a very long string.  The link gives you a shortcut to a long string
+‘/home/olusa/baba1/hs1’ -> ‘/etc/hosts’			        # verification of the link because we used -v to verify
+
+[root@olulinux ~]# ls -li /etc/hosts /home/olusa/baba1/hs1  # compares the original file location with the new link location 
+8409192 -rw-r--r-- 3 root root 126 Feb 23 20:57 /etc/hosts
+1101857 lrwxrwxrwx 1 root root  10 Apr 20 01:02 /home/olusa/baba1/hs1 -> /etc/hosts
+
+
+
+--- Permissions ----
+
+UGO - user - group - others 
+drwxrwxr-x # directory U:rwx G:rwx O:r-x
+
+[root@olulinux ~]# chown -v olusa:olusa /tmp/newfile   # olusa:olusa changes user & group ownership to olusa
+changed ownership of ‘/tmp/newfile’ from root:root to olusa:olusa
+
+[root@olulinux ~]# chown -v olusa: /tmp/newfile
+changed ownership of ‘/tmp/newfile’ from teacher:olusa to olusa:olusa
+
+[root@olulinux ~]# chown -v  :olusa /tmp/newfile
+changed ownership of ‘/tmp/newfile’ from olusa:students to :olusa
+
+--- useful cmds ----
+
+/Password # searches for the word Password
+
+/opt/splunk/bin/splunk restart
+
+./splunk start # starts splunk 
+./splunk status # checks splunk status
+./splunk stop # stops splunk
+./splunk restart # restarts splunk 
+[splunk@dps bin]$ ./splunk version # tells you the splunk version
+
+/opt/splunk/etc/apps/licenseusage/local
+cd ../../search/local   # Goes back to 2 steps to apps level then you can continue path from there
+
+
+df -h # Get server available space details
+
+mkdir -p inputs/local  # creates a nested directory inputs, then local in inputs
+
+gunzip ssh.log.gz # unzips to ssh.log
+
+unzip ssh.log.gz # unzips to ssh.log
+
+mv input.conf inputs.conf # renames input to inputs.conf & eliminates input.conf
+
+cp input.conf inputs.conf # renames input to inputs.conf & keeps input.conf
+
+scp -i olukey.pem ssh.log.gz ec2-user@18.209.8.29:/home/ec2-user # Public IP - run this cmd from Downloads just like ssh since your key pem exist there.  Transfers ssh.log.gz into the ec2-user@18.209.8.29 in the folder:/home/ec2-user
+
+scp /users/ishman79/Downloads/signatures.log.gz olu@54.144.218.37:golfer/ # UF2 use public IP - run this cmd from Downloads just like ssh since your key pem exist there.  Transfers signatures.log.gz into the user:olu in the folder:golfer
+
+[root@dps log]# rm -R walle/  # removes directory walle & all contents, say "y" approve content delete and directory delete
+
+:%s/old/new/gc  # replace all old with new throughout file with confirmations
+
+chown -R splunk:splunk /opt/splunk  # Changes ownership to splunk
+
+hostnamectl set-hostname IDX1 && exec bash # rename server instance
+hostnamectl set-hostname IDX2 && exec bash
+
+[splunk@cm splunk]$ cat splunkd.log | grep success* | wc  # grep will show all mentions of success & wc will count how many counts of the word success 
+    117    1757   23607
+
+
+
+
