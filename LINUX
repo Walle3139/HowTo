@@ -1,0 +1,17 @@
+--- To search for the keywords “correlation disabled” within all files under the /etc/apps/ directory and its subdirectories, 
+you can specify the path in your grep command. Here’s how:
+
+
+grep -rilE "correlation.*disabled" /etc/apps/*
+
+
+Explanation:
+
+	•	-r: Recursive, so it searches through all files and subdirectories within /etc/apps/.
+	•	-i: Ignores case.
+	•	-E: Enables extended regex.
+	•	"correlation.*disabled": The regex pattern.
+
+This command will search all files under /etc/apps/ and display lines containing “correlation” followed by “disabled” (regardless of case), with any characters in between.
+
+If you want to list only the file names where the pattern is found, add the -l option:
