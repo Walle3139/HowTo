@@ -1,0 +1,56 @@
+How to onboard Peoplesoft Logs in @ National University 
+
+Overview ---Splunk---GUI----
+
+	1. Create index=peoplesoft on NU ES-SH 
+	2. Switch to splunk (sudo su splunk)
+	3. On the DS in /deployment-apps, we're going to make an app directory (called whatever)
+	4.  make local, make inputs.conf 
+		1. monitor stanza for the file path, index, sourcetype
+		2. double check permissions
+		3. restart splunk
+ 
+	1. Go onto front end GUI Deployment server (on the VDI) 
+		1. Go to forwarder management
+		2. Make server class that uses the app we just made and the host we need to push app to
+	2. Check for logs on the ES 
+		1. Alert
+		2. CIM 
+		3. Data masking (sensitive information)
+
+
+---Linux---
+
+On Deployment Server
+
+sudo su splunk   # Makes you a user in splunk 
+
+osanya@splunkdeploy:~$ sudo su splunk  # Takes you from root user to splunk user
+splunk@splunkdeploy:/home/osanya$
+
+splunk@splunkdeploy:/home/osanya$ cd /opt/splunk/etc/deployment-apps/
+splunk@splunkdeploy:/opt/splunk/etc/deployment-apps$ ls -larth
+total 112K
+drwxr-xr-x  8 splunk splunk 4.0K Oct  1  2020 Splunk_TA_microsoft-iis
+drwxrwxr-x 10 splunk splunk 4.0K Jan  6  2022 Splunk_TA_aws
+drwxr-xr-x  8 splunk splunk 4.0K Jan  6  2022 Splunk_TA_juniper
+drwxr-xr-x 12 splunk splunk 4.0K Jan  6  2022 Splunk_TA_nix
+splunk@splunkdeploy:/opt/splunk/etc/deployment-apps$ mkdir Splunk_peoplesoft
+splunk@splunkdeploy:/opt/splunk/etc/deployment-apps$ ls -larth
+total 116K
+drwx------  2 splunk splunk 4.0K Feb 14  2024 _splunk_ds_info
+drwxrwxr-x  2 splunk splunk 4.0K Nov  8 20:45 Splunk_peoplesoft
+drwxr-xr-x 28 splunk splunk 4.0K Nov  8 20:45 .
+splunk@splunkdeploy:/opt/splunk/etc/deployment-apps$ cd Splunk_peoplesoft/
+splunk@splunkdeploy:/opt/splunk/etc/deployment-apps/Splunk_peoplesoft$ mkdir local
+splunk@splunkdeploy:/opt/splunk/etc/deployment-apps/Splunk_peoplesoft$ cd local/
+splunk@splunkdeploy:/opt/splunk/etc/deployment-apps/Splunk_peoplesoft/local$ vi inputs.conf
+splunk@splunkdeploy:/opt/splunk/etc/deployment-apps/Splunk_peoplesoft/local$ vi inputs.conf
+splunk@splunkdeploy:/opt/splunk/etc/deployment-apps/Splunk_peoplesoft/local$ cat inputs.conf
+
+[monitor://F:\SOAR-ERPFW-LOGS\aws-servers\prod\*\*\erpfw_accesslog.log*]
+disabled = false
+index = peoplesoft
+sourcetype = peoplesoft:accesslogslocal
+host_segment = 5
+
