@@ -54,6 +54,12 @@ index=_internal sourcetype=splunkd | stats dc(host) AS count
 | tstats values(sourcetype) where index=* sourcetype=infoblox:file by index
 
 
+--- TimeChat SPL ---
+
+index=intune sourcetype="mscs:azure:eventhub" operationName="Create DeviceManagementConfigurationPolicy"
+| timechart span=1d count by operationName
+
+
 --------
 
 
