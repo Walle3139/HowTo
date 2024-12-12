@@ -226,7 +226,25 @@ changed ownership of ‘/tmp/newfile’ from teacher:olusa to olusa:olusa
 [root@olulinux ~]# chown -v  :olusa /tmp/newfile
 changed ownership of ‘/tmp/newfile’ from olusa:students to :olusa
 
---- useful cmds ----
+--- Splunk File Paths ----
+
+$SPLUNK_HOME
+(/opt/splunk on linux, c:\program files\splunk on windows)
+
+cd /opt/splunk/etc/app/appname/local/inputs.conf
+
+$SPLUNK_HOME/etc/apps/launcher/local/inputs.conf
+
+
+
+--- Trouble Shooting .conf using Btool ---
+
+$SPLUNK_HOME/bin/splunk cmd btool inputs list ---debug  # list all the inputs.conf files 
+
+$SPLUNK_HOME/bin/splunk btool inputs list --debug | grep index  # list all the inputs.conf files but searches for those with the word "index"
+
+
+
 
 /Password # searches for the word Password
 
