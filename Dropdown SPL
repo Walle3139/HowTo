@@ -1,0 +1,33 @@
+--- Dropdown SPL ---
+
+
+- Edit dashboard
+- Add input 
+- Dropdown
+- Label = Tool Name 
+- Token = tool
+- Default = All
+- Initial Value = All
+- Static Option Name = All   Value = *
+- Dynamic Option | search string 
+
+(insert search above = -- To make the Tool Name dependent on the Data Center selected in Dropdown --)
+
+- Last 60 mins 
+- Field for Label = group (this is always same as whatever your stats count by is.  Here it is stats count by group)
+
+- Field for Value = group (this is always same as whatever your stats count by is.  Here it is stats count by group)
+
+
+Panel SPL that takes "$user$" input from dropdown to create custom output 
+
+
+-- Audit by user --
+
+index=auth sourcetype=cyberark
+| rex field
+| dedup FName 
+| rename duser as user
+| search user = "$user$"
+| sort - _time
+| table _time user action act FName
