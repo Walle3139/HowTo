@@ -58,3 +58,15 @@ index = peoplesoft
 sourcetype = peoplesoft:accesslogslocal
 host_segment = 5
 
+
+
+--- On Deployment Server ---
+
+	• Go to Settings  > Forwarder Management
+	• Apps > Splunk_peoplesoft 
+	• Add New Server Class > NU_PeopleSoft > Add App > Add Client 
+	• Add Host name to include list
+	• Edit App > Splunk_peoplesoft  > check Restart Splunkd > save
+	• Go to Settings > Server Controls > restart the DS
+	• Wait to see if logs are coming @ index=peoplesoft for last 30 days
+
