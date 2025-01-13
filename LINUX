@@ -243,6 +243,20 @@ $SPLUNK_HOME/bin/splunk cmd btool inputs list ---debug  # list all the inputs.co
 
 $SPLUNK_HOME/bin/splunk btool inputs list --debug | grep index  # list all the inputs.conf files but searches for those with the word "index"
 
+dbsecusr@csvra99a0188:/opt/dbsecusr>top  # Live list of all programs running & how much memory they are using
+
+dbsecusr@csvra99a0188:/opt/dbsecusr>df -h  # Check disk space to make sure you aren't running out of storage room on your disk
+
+dbsecusr@csvra99a0188:/opt/dbsecusr>grep --color=always "ERROR" /app01/splunk/var/log/splunk/splunkd.log | less -R
+# checked for "ERROR" msg
+
+dbsecusr@csvra99a0188:/app01/splunk/bin>cat /app01/splunk/etc/system/local/outputs.conf  # Cat to view direct into any file from any location
+
+dbsecusr@csvra99a0188:/app01/splunk/bin>vi /app01/splunk/etc/system/local/outputs.conf # Vi to edit direct into any file from any location
+
+find /app01/splunk/etc/apps -type d -iname "*neo4j*"  # search for the directory name that includes neo4j in this path directory /app01/splunk/etc/apps
+
+
 
 
 
