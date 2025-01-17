@@ -53,7 +53,56 @@ shift + zz # saves file
 
 cd / # returns to root directory
 
+
+
 truncate -s 0 touchfile # This will set the size of touchfile to zero, thereby erasing the content
+
+-----------
+
+Ctrl C # Cancels the current cmd
+
+Ctrl L # Clears the CLI and takes the last line to the top
+
+clear # Clears the CLI and takes the last line to the top
+
+echo; clear; echo # Adds a space on top & bottom of cleared CLI at the top
+
+whoami # which user am i
+
+pwd # where are mine
+
+ls -larth # Detailed list
+
+shift ZZ # saves file
+
+cd .. # Go back 1 directory from your current directory
+
+cd ../.. # Go back 2 directories from your current directory
+
+df -h # get server available space details
+
+mkdir -p inputs/local # creates a nested directory inputs, then local in inputs
+
+cp input.conf inputs.conf # renames input to inputs.conf & keeps inputs.conf
+
+scp # secure copy
+
+echo $SPLUNK_HOME # shows the location of splunk.  Where it is installed
+
+man who # Manual of Who
+
+man whoami # Manual of Whoami
+
+man ls # Manual of ls
+
+w # details of all priveledge users currently logged into the instance
+
+history # Numbered history of all my cmd
+
+!303 # Will run the cmd at line 303 {Instead of tabbing up mutiple times, type history then find the line you want to run again
+say it is line 45.  !45 will run the cmd again on line 45
+
+-----------
 
 
 
