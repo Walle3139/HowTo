@@ -1,7 +1,7 @@
 -- Step by Step Guide for an ITSI Monitoring Instance Upgrade --
 
 - Before upgrading ITSI, confirm if any other Apps insatlled on ITSI need to also be upgraded or if their current version is compatible with the new version you are upgrading ITSI to ?
-- Go to Splunk GUI > Apps > Manage Apps
+- Go to Splunk ITSI box GUI > Apps > Manage Apps
 - Validate the version of the Content Pack for ITSI Monitoring and Alerting App under Apps
 - Validate that the version of ITSI we are upgrading to 4.19.1 is compatible with that content pack app | https://docs.splunk.com/Documentation/CPITSIMonitorAlert/2.3.0/CP/About
 
@@ -10,4 +10,47 @@
 - Create a CHANGE MANAGEMENT request 
 
 - Create a BACKUP of current Files
+
 - Splunk doc on how to create a full backup of ITSI | https://docs.splunk.com/Documentation/ITSI/4.19.2/Configure/FullBackup
+- Go to Splunk ITSI box GUI > Configurations > Additional Configurations > Backup/Restore > Create Job > Create Backup Job > Full Backup
+- Refresh screen to confirm the Backup is complete 
+
+- We are now ready to INSTALL the new ITSI version 
+
+- ITSI Upgrade Splunk Doc | https://docs.splunk.com/Documentation/ITSI/4.19.2/Install/Upgrade
+- Login to the backend via Putty or Mobaxterm
+- Remote host : blkulog001
+- Username : <your_BLK_username>
+- Port : 22
+- pbrun bash # Grants you sudo access (PB means Powerbroker)
+- bash-4.2$ # This will appear after you run pbrun bash
+- Check Splunk status 
+  cd /opt/splunk/bin/
+  ./splunk status
+- If Splunk is running, then stop Splunk 
+- Stop Splunk 
+  ./splunk stop # No need to cd /opt/splunk/bin since you are already in the bin directory when you checked the status 
+- if you get an error, you may not have permission to stop Splunk.  Ask for elevated access 
+
+- TRANSFER latest version of ITSI
+- Using WinSCP of your favorite transfer App, transfer the new spl file 
+- Drag & Drop from local computer to /opt/splunk/etc/apps/ in WinSCP
+- Validate that the .spl file (splunk-it-service-intelligence_<latest_version>.spl) is in /opt/splunk/etc/apps/
+  cd /opt/splunk/etc/apps
+- Extract the new .spl file into /opt/splunk/etc/apps/
+  tar -xvf splunk-it-service-intelligence_<latest_version>.spl -C /opt/splunk/etc/apps/
+- Replace <latest_version> above in the tar file with the new version #
+- Restart Splunk 
+  cd /opt/splunk/bin
+  ./splunk start
+- Check Splunk status to validate that Splunk is back up & running
+  ./splunk status
+
+- Login to Splunk ITSI GUI to validate Install 
+
+- When you 1st login after an upgrade, you will get a prompt to acknowledge that you want to use the new version you just installed.  CONFIRM YES
+- Splunk ITSI box GUI > Dashboards > ITSI Health Check
+- Check to validate there are no errors
+- Check to make sure Service Analyzer looks good
+- Check to make sure Glass Table looks good.
+
