@@ -1,0 +1,13 @@
+-- Step by Step Guide for an ITSI Monitoring Instance Upgrade --
+
+- Before upgrading ITSI, confirm if any other Apps insatlled on ITSI need to also be upgraded or if their current version is compatible with the new version you are upgrading ITSI to ?
+- Go to Splunk GUI > Apps > Manage Apps
+- Validate the version of the Content Pack for ITSI Monitoring and Alerting App under Apps
+- Validate that the version of ITSI we are upgrading to 4.19.1 is compatible with that content pack app | https://docs.splunk.com/Documentation/CPITSIMonitorAlert/2.3.0/CP/About
+
+- DOWNLOAD a copy of ITSI .spl file from Splunkbase or from your internal compnay folder or colleague | splunk-it-service-intelligence_<latest_version>.spl
+
+- Create a CHANGE MANAGEMENT request 
+
+- Create a BACKUP of current Files
+- Splunk doc on how to create a full backup of ITSI | https://docs.splunk.com/Documentation/ITSI/4.19.2/Configure/FullBackup
