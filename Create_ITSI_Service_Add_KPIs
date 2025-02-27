@@ -1,1 +1,27 @@
+-- Create Service --
+
+- Login to ITSI Instance
+- on top menu 
+- Configuration > Service Monitoring > Service and KPI Management > Create Service
+- Create by adding Title & Description > select >  Manually add Service content 
+- Click the new service in the list of Services 
+
+-- Add KPIs --
+
+- Click KPIs > New (Dropdown) > Generic KPIs > add Title & Description > Ad hoc Search > 
+- Enter Search SPL 
+- Enter Threshold Field (_time for pure count or Field name if thresholding a particular field)
+
+
+-- Add Thresholding -- 
+
+- Click the added KPI - It will have 3 drop downs options (Search and Calculate / Thresholding / Anomaly Detection) 
+- Click Thresholding > select all options
+- Under Aggregate threshold values - set your low - medium - high - critical values 
+- Set your Base Severity (This is a critical selection.  Base Severity is how important this KPI is to the overall Service Health)
+
+
+-- Set Importance Score --
+
+- Select from 0 - 10 how important that KPI is to the overall Service Health
 
