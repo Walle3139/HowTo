@@ -1,0 +1,82 @@
+
+~SecureCRT Linux Cmds
+
+Passphrase CIM Dev SSH Key : LPMq6RMiJ35s6994kLC7hMBe
+
+Passphrase CRE SSH Key : 84542071-e9ca-460f
+
+Passphrase Fed SSH Key : 23debbbe-4267-4886-acab-af1d8c32f06c
+
+Gitlab - Repo - Username/Password
+
+c5404993
+TECP!n8Yv3S4wh2
+
+
+
+~ Gitlab Cmds | 
+
+cd /c/users ### Access your c drive on laptop from bash
+cd c5404993 ### Access your NS2 user account on computer
+cd 'OneDrive - SAP National Security Services, Inc'/
+cd Documents/  ### Create root folder here
+git clone https://gitlab.css.doc  ### From 
+
+
+git pull 
+git status	### Shows status of everything 
+git add .	### Stages all modifications made in the README.md or else where
+git commit -m "initial uploads"	### Commit cmd for inital upload
+git push origin main ### Pushes changes from original local folder to the main repo
+
+
+git pull 
+git status	### Shows status of everything 
+git add README.md  ### Stages all changes made only in README.md
+git commit -m "second_upload"	### Commit cmd for second_upload
+git push origin main ### Pushes changes from original local folder to the main repo
+
+
+Left Menu | Source Control
+
+git pull 
+git status	### Shows status of everything 
+git add README.md  ### Stages all changes made only in README.md
+OR
+git add .
+Type a msg for the changes (e.g readme_update_#4_#5_#6) (e.g .conf+readme_updates_#1_#2_#3_#4_#5_#6_#7_#8)
+Select dropdown "Commit & Push"
+
+
+Ctrl + Shift + V ### Preview README.md exactly like it is in GitLab Repo
+
+
+git config --global user.email "Olu.Sanya@sapns2.com"
+git config --global user.name "Olu Sanya"
+
+
+
+***SPL***
+
+Count all the sourcetypes in a certain index
+| tstats count where index=olu by sourcetype
+
+
+List all the sourcetypes in a certain index
+| tstats values(sourcetype) where index=olu
+
+
+Ingest count | Last 24 hr | span=1 hr
+| tstats count where index=olu sourcetype=cisco:asa earliest=-24@h lastest=now by _time
+| timechart span=1h sum(count) as events
+
+
+Latest Recorded Ingest 
+index=olu sourcetype=cisco:asa
+| stats latests(_time) as last_event
+| eval last_event=strftime(last_event,"%Y-%m-%d %H:%M:%S")
+
+
+List all the sourcetype=azure:* by index
+| tstats count where sourcetype=azure:* by index, sourcetype
+| sort index sourcetype
