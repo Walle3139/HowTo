@@ -1,0 +1,75 @@
+CORP splunk@adhocsearchhead02b.corpmon.sapgss.com in ~ $ whoami
+splunk
+CORP splunk@adhocsearchhead02b.corpmon.sapgss.com in ~ $ pwd
+/opt/splunk  ## $SPLUNK_HOME
+
+
+CORP splunk@adhocsearchhead02b.corpmon.sapgss.com in ~ $ cd bin
+CORP splunk@adhocsearchhead02b.corpmon.sapgss.com in ~/bin $ splunk restart
+CORP splunk@adhocsearchhead02b.corpmon.sapgss.com in ~/bin $ splunk start  (use this if splunkd isn't running at all)
+CORP splunk@adhocsearchhead02b.corpmon.sapgss.com in ~/bin $ splunk status
+
+cd /opt/splunk/etc/apps/<app_name>/local
+
+
+.tgz file creation in Bash 
+cd to the location of the directory you want to .tgz
+
+tar -czvf Splunk_TA_TrendMicro.tgz Splunk_TA_TrendMicro
+tar -czvf 02-ns2-us-Splunk_TA_aws_customTA.tgz 02-ns2-us-Splunk_TA_aws_customTA
+
+
+Un Tar a .tgz file in Linux bash into it's current directory 
+tar -xzvf 02-ns2-us-Splunk_TA_aws_customTA.tgz
+tar -xzvf 02-ns2-us-Splunk_TA_aws_customTA.tgz -C /path/to/destination/
+
+
+To verify the contents of the .tgz file:
+
+tar -tzf 02-ns2-us-Splunk_TA_AWS_100.tgz
+
+
+Move .tgz file to deploy directory
+
+mv 02-ns2-us-Splunk_TA_AWS_100.tgz /opt/splunk/apps/ready_to_deploy/
+
+
+Move both .tgz file to deploy directory
+
+mv 02-ns2-us-Splunk_TA_AWS_100.tgz 02-ns2-us-Splunk_TA_Azure_100.tgz /opt/splunk/apps/ready_to_deploy/
+
+
+grep | How do i grep to see if i have the app tenable
+
+cd $SPLUNK_HOME/etc/apps
+ls -larth | grep -i tenable
+
+ls -larth $SPLUNK_HOME/etc/apps | grep -i tenable
+ls -larth /opt/splunk/etc/apps/ | grep -i tenable
+
+
+
+How to create Directorys & Files in Linux Bash 
+
+# Navigate to the apps directory
+cd /opt/splunk/etc/apps
+
+# Create the main directory structure
+mkdir -p 02-ns2-us-Splunk_TA_Azure_100/default
+mkdir -p 02-ns2-us-Splunk_TA_Azure_100/metadata
+
+# Create the empty configuration files in default/
+touch 02-ns2-us-Splunk_TA_Azure_100/default/app.conf
+touch 02-ns2-us-Splunk_TA_Azure_100/default/props.conf
+touch 02-ns2-us-Splunk_TA_Azure_100/default/transforms.conf
+touch 02-ns2-us-Splunk_TA_Azure_100/default/eventtypes.conf
+touch 02-ns2-us-Splunk_TA_Azure_100/default/tags.conf
+
+# Create the metadata file
+touch 02-ns2-us-Splunk_TA_Azure_100/metadata/default.meta
+
+# Create the app manifest file
+touch 02-ns2-us-Splunk_TA_Azure_100/app.manifest
+
+# Verify the structure was created
+tree 02-ns2-us-Splunk_TA_Azure_100/    
